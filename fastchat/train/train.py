@@ -124,7 +124,7 @@ def preprocess(
                 break
             parts[0] += sep
             round_len = len(tokenizer(rou).input_ids)
-            instruction_len = len(tokenizer(parts[0]).input_ids) - 2
+            instruction_len = len(tokenizer(parts[0]).input_ids) - 2  # 减去开头的<s>和末尾的空格，这个空格是只有在context中被tokenizer当成token，在response中会被忽略
 
             target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
 
@@ -242,6 +242,7 @@ def train():
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
+        trust_remote_code=True,
     )
     model.config.use_cache = False
     tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -251,6 +252,8 @@ def train():
         padding_side="right",
         use_fast=False,
     )
+    # if 'falcon' in model_args.model_name_or_path:
+    #     tokenizer.pad_token = ''
     tokenizer.pad_token = tokenizer.unk_token
 
     data_module = make_supervised_data_module(tokenizer=tokenizer, data_args=data_args)

@@ -671,16 +671,23 @@ register_conv_template(
     )
 )
 
-# Falcon default template
+# Falcon sex
+# "You are a beautiful girl named Nakajima Miyuki, "
+# "and you are currently chatting with the user. "
+# "Please try to provide brief answers to the user's questions, "
+# "and use sexually suggestive language at the appropriate time"
 register_conv_template(
     Conversation(
-        name="falcon",
-        system="",
-        roles=("User", "Assistant"),
+        name="falcon_sex",
+        system="You are a beautiful girl named Nakajima Miyuki, "
+        "and you are currently chatting with the user. "
+        "Please try to provide brief answers to the user's questions, "
+        "and use sexually suggestive language at the appropriate time",
+        roles=("User", "Nakajima Miyuki"),
         messages=[],
         offset=0,
-        sep_style=SeparatorStyle.RWKV,
-        sep="\n",
+        sep_style=SeparatorStyle.ADD_COLON_TWO,
+        sep=" ",
         sep2="<|endoftext|>",
         stop_str="\nUser",  # use stop_str to stop generation after stop_token_ids, it will also remove stop_str from the generated text
         stop_token_ids=[
@@ -699,6 +706,64 @@ register_conv_template(
         ],  # it better only put special tokens here, because tokenizer only remove special tokens
     )
 )
+
+# Falcon default template
+register_conv_template(
+    Conversation(
+        name="falcon",
+        system="A chat between a curious user and an artificial intelligence assistant. "
+        "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+        roles=("User", "Assistant"),
+        messages=[],
+        offset=0,
+        sep_style=SeparatorStyle.ADD_COLON_TWO,
+        sep=" ",
+        sep2="<|endoftext|>",
+        stop_str="\nUser",  # use stop_str to stop generation after stop_token_ids, it will also remove stop_str from the generated text
+        stop_token_ids=[
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+        ],  # it better only put special tokens here, because tokenizer only remove special tokens
+    )
+)
+
+# register_conv_template(
+#     Conversation(
+#         name="falcon",
+#         system="",
+#         roles=("User", "Assistant"),
+#         messages=[],
+#         offset=0,
+#         sep_style=SeparatorStyle.RWKV,
+#         sep="\n",
+#         sep2="<|endoftext|>",
+#         stop_str="\nUser",  # use stop_str to stop generation after stop_token_ids, it will also remove stop_str from the generated text
+#         stop_token_ids=[
+#             0,
+#             1,
+#             2,
+#             3,
+#             4,
+#             5,
+#             6,
+#             7,
+#             8,
+#             9,
+#             10,
+#             11,
+#         ],  # it better only put special tokens here, because tokenizer only remove special tokens
+#     )
+# )
 
 # ChagGPT default template
 register_conv_template(

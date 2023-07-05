@@ -501,7 +501,13 @@ By using this service, users are required to agree to the following terms: The s
 
     state = gr.State()
     model_description_md = get_model_description_md(models)
-    gr.Markdown(notice_markdown + model_description_md, elem_id="notice_markdown")
+    # gr.Markdown(notice_markdown + model_description_md, elem_id="notice_markdown")
+    # gr.Markdown('''
+    # # Falcon lima 微调 10 epochs - 李荣升
+    # ''')
+    gr.Markdown('''
+    # Falcon lima 微调 10 epochs - 李荣升
+    ''')
 
     with gr.Row(elem_id="model_selector_row"):
         model_selector = gr.Dropdown(
@@ -562,7 +568,7 @@ By using this service, users are required to agree to the following terms: The s
             label="Max output tokens",
         )
 
-    gr.Markdown(learn_more_md)
+    # gr.Markdown(learn_more_md)
 
     # Register listeners
     btn_list = [upvote_btn, downvote_btn, flag_btn, regenerate_btn, clear_btn]

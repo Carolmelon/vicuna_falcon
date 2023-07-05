@@ -230,4 +230,5 @@ if __name__ == "__main__":
         help="Print useful debug information (e.g., prompts)",
     )
     args = parser.parse_args()
+    print(args)
     main(args)

@@ -796,7 +796,7 @@ class FalconAdapter(BaseModelAdapter):
     """The model adapter for tiiuae/falcon-40b."""
 
     def match(self, model_path: str):
-        return "falcon" in model_path.lower()
+        return "falcon" in model_path.lower() and "falcon_sex" not in model_path.lower()
 
     def load_model(self, model_path: str, from_pretrained_kwargs: dict):
         config = AutoConfig.from_pretrained(
@@ -820,6 +820,35 @@ class FalconAdapter(BaseModelAdapter):
 
     def get_default_conv_template(self, model_path: str) -> Conversation:
         return get_conv_template("falcon")
+
+class FalconAdapterSex(BaseModelAdapter):
+    """The model adapter for tiiuae/falcon-40b."""
+
+    def match(self, model_path: str):
+        return "falcon_sex" in model_path.lower()
+
+    def load_model(self, model_path: str, from_pretrained_kwargs: dict):
+        config = AutoConfig.from_pretrained(
+            model_path,
+            trust_remote_code=True,
+        )
+
+        # Strongly suggest using bf16, which is recommended by the author of Falcon
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            config=config,
+            low_cpu_mem_usage=True,
+            trust_remote_code=True,
+            **from_pretrained_kwargs,
+        )
+        tokenizer = AutoTokenizer.from_pretrained(model_path, config=config)
+        # In Falcon tokenizer config and special config there is not any pad token
+        # Setting `pad_token_id` to 9, which corresponds to special token '>>SUFFIX<<'
+        tokenizer.pad_token_id = 9
+        return model, tokenizer
+
+    def get_default_conv_template(self, model_path: str) -> Conversation:
+        return get_conv_template("falcon_sex")
 
 
 class TigerBotAdapter(BaseModelAdapter):
@@ -909,6 +938,7 @@ register_model_adapter(TuluAdapter)
 register_model_adapter(FalconAdapter)
 register_model_adapter(TigerBotAdapter)
 register_model_adapter(BaichuanAdapter)
+register_model_adapter(FalconAdapterSex)
 
 # After all adapters, try the default base adapter.
 register_model_adapter(BaseModelAdapter)

@@ -259,7 +259,8 @@ async def get_gen_params(
             elif msg_role == "assistant":
                 conv.append_message(conv.roles[1], message["content"])
             else:
-                raise ValueError(f"Unknown role: {msg_role}")
+                conv.append_message(msg_role, message['content'])   # role不是[user, assistant, system]，就直接加吧，更灵活
+                # raise ValueError(f"Unknown role: {msg_role}")
 
         # Add a blank message for the assistant.
         conv.append_message(conv.roles[1], None)
@@ -364,6 +365,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
         stream=request.stream,
         stop=request.stop,
     )
+    print(f"==== request ==== in create_chat_completion() ==\n{gen_params}")
     error_check_ret = await check_length(
         request, gen_params["prompt"], gen_params["max_new_tokens"]
     )
@@ -457,6 +459,7 @@ async def chat_completion_stream_generator(
 
 
 async def chat_completion_stream(model_name: str, gen_params: Dict[str, Any]):
+    logger.info(f"==== request ==== in chat_completion_stream() ==\n{gen_params}")
     controller_url = app_settings.controller_address
     async with httpx.AsyncClient() as client:
         worker_addr = await _get_worker_address(model_name, client)
@@ -480,6 +483,7 @@ async def chat_completion_stream(model_name: str, gen_params: Dict[str, Any]):
 async def chat_completion(
     model_name: str, gen_params: Dict[str, Any]
 ) -> Optional[Dict[str, Any]]:
+    logger.info(f"==== request ==== in chat_completion() ==\n{gen_params}")
     async with httpx.AsyncClient() as client:
         worker_addr = await _get_worker_address(model_name, client)
 
@@ -536,6 +540,7 @@ async def create_completion(request: CompletionRequest):
                 stream=request.stream,
                 stop=request.stop,
             )
+            print(f"==== request ==== in create_completion() ==\n{payload}")
             for i in range(request.n):
                 content = asyncio.create_task(generate_completion(payload))
                 text_completions.append(content)

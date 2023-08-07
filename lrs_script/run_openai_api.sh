@@ -1,4 +1,5 @@
 python3 -m fastchat.serve.openai_api_server --host 0.0.0.0 --port 8483
+python3 fastchat/serve/openai_api_server.py --host 0.0.0.0 --port 8483
 
 # 对话模型
 curl http://jp02-gpu-a100s06.jp02.baidu.com:8483/v1/chat/completions \

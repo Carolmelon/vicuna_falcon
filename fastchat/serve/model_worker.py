@@ -114,6 +114,9 @@ class ModelWorker:
         # generate_stream
         is_chatglm = "chatglm" in str(type(self.model)).lower()
         is_falcon = "rwforcausallm" in str(type(self.model)).lower()
+        print(f"self.conv: ")
+        print(self.conv)
+        print(f"is_falcon: {is_falcon}")
         if is_chatglm:
             self.generate_stream_func = chatglm_generate_stream
         elif is_falcon:
@@ -205,6 +208,7 @@ class ModelWorker:
         return {"conv": self.conv}
 
     def generate_stream_gate(self, params):
+        print(params)
         try:
             for output in self.generate_stream_func(
                 self.model,

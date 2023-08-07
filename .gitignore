@@ -36,3 +36,4 @@ build
 # model weights
 
 output*
+data/

@@ -40,7 +40,9 @@ pip install --upgrade openai
 Then, interact with model vicuna:
 ```python
 import openai
-openai.api_key = "EMPTY" # Not support yet
+# to get proper authentication, make sure to use a valid key that's listed in
+# the --api-keys flag. if no flag value is provided, the `api_key` will be ignored.
+openai.api_key = "EMPTY"
 openai.api_base = "http://localhost:8000/v1"
 
 model = "vicuna-7b-v1.3"
@@ -102,6 +104,25 @@ curl http://localhost:8000/v1/embeddings \
   }'
 ```
 
+### Running multiple 
+
+If you want to run multiple models on the same machine and in the same process,
+you can replace the `model_worker` step above with a multi model variant:
+
+```bash
+python3 -m fastchat.serve.multi_model_worker \
+    --model-path lmsys/vicuna-7b-v1.3 \
+    --model-names vicuna-7b-v1.3 \
+    --model-path lmsys/longchat-7b-16k \
+    --model-names longchat-7b-16k
+```
+
+This loads both models into the same accelerator and in the same process.  This
+works best when using a Peft model that triggers the `PeftModelAdapter`.
+
+TODO: Base model weight optimization will be fixed once [this
+Peft](https://github.com/huggingface/peft/issues/430) issue is resolved.
+
 ## LangChain Support
 This OpenAI-compatible API server supports LangChain. See [LangChain Integration](langchain_integration.md) for details.
 
@@ -127,5 +148,4 @@ Some features to be implemented:
 - [ ] Support more parameters like `logprobs`, `logit_bias`, `user`, `presence_penalty` and `frequency_penalty`
 - [ ] Model details (permissions, owner and create time)
 - [ ] Edits API
-- [ ] Authentication and API key
 - [ ] Rate Limitation Settings
